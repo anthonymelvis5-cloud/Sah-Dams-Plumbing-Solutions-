@@ -1,97 +1,231 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { ServicesSection } from './components/ServicesSection';
+import { PropertySearch } from './components/PropertySearch';
+import { FeaturedProperties } from './components/FeaturedProperties';
+import { PropertyDetailModal } from './components/PropertyDetailModal';
+import { SignatureCollection } from './components/SignatureCollection';
 import { AboutSection } from './components/AboutSection';
-import { WhyChooseUs } from './components/WhyChooseUs';
-import { CostEstimator } from './components/CostEstimator';
-import { ProjectsGallery } from './components/ProjectsGallery';
+import { WhyAurevia } from './components/WhyAurevia';
+import { ServicesSection } from './components/ServicesSection';
+import { DestinationsSection } from './components/DestinationsSection';
+import { ClientExperience } from './components/ClientExperience';
 import { TestimonialsSection } from './components/TestimonialsSection';
-import { ServiceAreas } from './components/ServiceAreas';
+import { JournalSection } from './components/JournalSection';
+import { JournalArticleModal } from './components/JournalArticleModal';
 import { CtaSection } from './components/CtaSection';
 import { ContactSection } from './components/ContactSection';
+import { ConsultationModal } from './components/ConsultationModal';
 import { Footer } from './components/Footer';
-import { QuoteModal } from './components/QuoteModal';
-import { Phone } from 'lucide-react';
-import { COMPANY_INFO } from './data/plumbingData';
+import { PROPERTIES } from './data/realEstateData';
+import { Property, FilterState, JournalArticle } from './types/realEstate';
 
 export default function App() {
-  const [quoteModalOpen, setQuoteModalOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState<string | undefined>(undefined);
-  const [prefilledEstimate, setPrefilledEstimate] = useState<string | undefined>(undefined);
+  // State for interactive modals
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [selectedArticle, setSelectedArticle] = useState<JournalArticle | null>(null);
+  const [consultationModalOpen, setConsultationModalOpen] = useState(false);
+  const [consultationTopic, setConsultationTopic] = useState('Private Client Advisory');
+  const [consultationTargetProperty, setConsultationTargetProperty] = useState<Property | null>(null);
 
-  const handleOpenQuote = (service?: string) => {
-    setSelectedService(service);
-    setPrefilledEstimate(undefined);
-    setQuoteModalOpen(true);
+  // Filter state for property search
+  const [filter, setFilter] = useState<FilterState>({
+    location: '',
+    propertyType: '',
+    status: 'All',
+    priceRange: '',
+    bedrooms: '',
+  });
+
+  // Filter computation
+  const filteredProperties = useMemo(() => {
+    return PROPERTIES.filter((item) => {
+      // 1. Location filter
+      if (filter.location && !item.location.toLowerCase().includes(filter.location.toLowerCase()) && item.city !== filter.location) {
+        return false;
+      }
+      // 2. Type filter
+      if (filter.propertyType && item.type !== filter.propertyType) {
+        return false;
+      }
+      // 3. Status filter
+      if (filter.status !== 'All' && item.status !== filter.status) {
+        return false;
+      }
+      // 4. Price range filter
+      if (filter.priceRange) {
+        if (filter.priceRange === 'Under $5,000,000' && item.price >= 5000000) return false;
+        if (filter.priceRange === '$5,000,000 - $8,000,000' && (item.price < 5000000 || item.price > 8000000)) return false;
+        if (filter.priceRange === '$8,000,000+' && item.price <= 8000000) return false;
+      }
+      // 5. Bedrooms filter
+      if (filter.bedrooms) {
+        const requiredBeds = parseInt(filter.bedrooms, 10);
+        if (!isNaN(requiredBeds) && item.bedrooms < requiredBeds) return false;
+      }
+      return true;
+    });
+  }, [filter]);
+
+  const handleResetFilter = () => {
+    setFilter({
+      location: '',
+      propertyType: '',
+      status: 'All',
+      priceRange: '',
+      bedrooms: '',
+    });
   };
 
-  const handleApplyEstimate = (service: string, estimateRange: string) => {
-    setSelectedService(service);
-    setPrefilledEstimate(estimateRange);
-    setQuoteModalOpen(true);
+  const handleOpenConsultation = (topic = 'Private Client Advisory', property: Property | null = null) => {
+    setConsultationTopic(topic);
+    setConsultationTargetProperty(property);
+    setConsultationModalOpen(true);
+  };
+
+  const handleSelectDestination = (destName: string) => {
+    setFilter((prev) => ({
+      ...prev,
+      location: destName,
+    }));
+    const el = document.getElementById('properties');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleFilterStatus = (status: 'Buy' | 'Rent') => {
+    setFilter((prev) => ({
+      ...prev,
+      status: status,
+    }));
+    const el = document.getElementById('properties');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleExploreProperties = () => {
+    const el = document.getElementById('properties');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col text-slate-900 font-sans selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-[#0b0c0e] text-[#f4efe8] flex flex-col font-sans selection:bg-[#c5a880] selection:text-[#0b0c0e]">
       
-      {/* 1. Navigation */}
-      <Navbar onOpenQuote={handleOpenQuote} />
-
-      <main className="flex-1">
-        {/* 2. Hero Section */}
-        <Hero onOpenQuote={() => handleOpenQuote()} />
-
-        {/* 3. Services Section */}
-        <ServicesSection onSelectService={handleOpenQuote} />
-
-        {/* Interactive Feature: Instant Cost & Estimate Tool */}
-        <CostEstimator onApplyEstimate={handleApplyEstimate} />
-
-        {/* 4. About Section */}
-        <AboutSection onOpenQuote={() => handleOpenQuote()} />
-
-        {/* 5. Why Choose Us Section */}
-        <WhyChooseUs onOpenQuote={() => handleOpenQuote()} />
-
-        {/* 6. Projects Section */}
-        <ProjectsGallery onOpenQuote={handleOpenQuote} />
-
-        {/* 7. Testimonials Section */}
-        <TestimonialsSection />
-
-        {/* 8. Service Areas Section */}
-        <ServiceAreas onOpenQuote={handleOpenQuote} />
-
-        {/* 9. Call-To-Action Section */}
-        <CtaSection onOpenQuote={() => handleOpenQuote()} />
-
-        {/* 10. Contact Section */}
-        <ContactSection initialService={selectedService} />
-      </main>
-
-      {/* Footer */}
-      <Footer onOpenQuote={handleOpenQuote} />
-
-      {/* Free Quote Modal */}
-      <QuoteModal
-        isOpen={quoteModalOpen}
-        onClose={() => setQuoteModalOpen(false)}
-        preselectedService={selectedService}
-        prefilledEstimate={prefilledEstimate}
+      {/* 1. Sticky Navigation */}
+      <Navbar
+        onOpenConsultation={(topic) => handleOpenConsultation(topic)}
+        onFilterStatus={handleFilterStatus}
       />
 
-      {/* Mobile Floating Quick Action (Compliant with 15% mobile sticky cap) */}
-      <div className="fixed bottom-3 right-3 sm:hidden z-40">
-        <a
-          href={`tel:${COMPANY_INFO.phoneClean}`}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-full shadow-lg shadow-blue-600/40 text-xs active:scale-95 transition-transform"
-          aria-label="Call Dispatch"
-        >
-          <Phone className="w-3.5 h-3.5" />
-          <span>Call 24/7</span>
-        </a>
-      </div>
+      <main className="flex-1">
+        {/* 2. Full-Screen Cinematic Hero Section */}
+        <Hero
+          onExploreProperties={handleExploreProperties}
+          onOpenConsultation={() => handleOpenConsultation('Private Client Consultation')}
+        />
+
+        {/* 3. Integrated Sophisticated Property Search */}
+        <PropertySearch
+          filter={filter}
+          onFilterChange={setFilter}
+          onResetFilter={handleResetFilter}
+          resultsCount={filteredProperties.length}
+        />
+
+        {/* 4. Featured Properties Section (6 luxury properties) */}
+        <FeaturedProperties
+          properties={filteredProperties}
+          onSelectProperty={(property) => setSelectedProperty(property)}
+          onOpenConsultation={() => handleOpenConsultation('Off-Market Inventory Inquiry')}
+        />
+
+        {/* 5. The Aurevia Signature Collection */}
+        <SignatureCollection
+          properties={PROPERTIES}
+          onSelectProperty={(property) => setSelectedProperty(property)}
+          onOpenConsultation={(topic) => handleOpenConsultation(topic)}
+        />
+
+        {/* 6. About Section */}
+        <AboutSection
+          onOpenConsultation={() => handleOpenConsultation('About Aurevia Advisory')}
+        />
+
+        {/* 7. Why Aurevia */}
+        <WhyAurevia />
+
+        {/* 8. Bespoke Services Section */}
+        <ServicesSection
+          onOpenConsultation={(serviceTitle) => handleOpenConsultation(`Engagement: ${serviceTitle}`)}
+        />
+
+        {/* 9. Explore Destinations / Neighborhoods */}
+        <DestinationsSection
+          onSelectDestination={handleSelectDestination}
+        />
+
+        {/* 10. Client Experience (Timeline Process) */}
+        <ClientExperience
+          onStartProcess={() => handleOpenConsultation('Acquisition Advisory Onboarding')}
+        />
+
+        {/* 11. Testimonials */}
+        <TestimonialsSection />
+
+        {/* 12. The Aurevia Journal (Editorial) */}
+        <JournalSection
+          onSelectArticle={(article) => setSelectedArticle(article)}
+        />
+
+        {/* 13. Cinematic Call to Action */}
+        <CtaSection
+          onSpeakWithAdvisor={() => handleOpenConsultation('Direct Partner Advisory')}
+        />
+
+        {/* 14. Contact Section */}
+        <ContactSection
+          initialInterest="Buying"
+          initialLocation={filter.location || 'London'}
+        />
+      </main>
+
+      {/* 15. Footer */}
+      <Footer
+        onOpenConsultation={(topic) => handleOpenConsultation(topic)}
+        onFilterStatus={handleFilterStatus}
+      />
+
+      {/* Property Detail Experience Modal */}
+      <PropertyDetailModal
+        property={selectedProperty}
+        onClose={() => setSelectedProperty(null)}
+        onRequestViewing={(prop) => {
+          setSelectedProperty(null);
+          handleOpenConsultation(`Private Viewing for ${prop.name}`, prop);
+        }}
+        onContactAgent={(prop) => {
+          setSelectedProperty(null);
+          handleOpenConsultation(`Agent Inquiry for ${prop.name}`, prop);
+        }}
+      />
+
+      {/* Journal Article Reader Modal */}
+      <JournalArticleModal
+        article={selectedArticle}
+        onClose={() => setSelectedArticle(null)}
+      />
+
+      {/* Private Consultation & Viewing Scheduler Modal */}
+      <ConsultationModal
+        isOpen={consultationModalOpen}
+        onClose={() => setConsultationModalOpen(false)}
+        initialTopic={consultationTopic}
+        selectedProperty={consultationTargetProperty}
+      />
 
     </div>
   );

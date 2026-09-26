@@ -1,33 +1,34 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Clock, ShieldCheck, CheckCircle2, Send, AlertCircle } from 'lucide-react';
-import { COMPANY_INFO, SERVICES } from '../data/plumbingData';
-import { QuoteFormData } from '../types';
+import { COMPANY_DETAILS } from '../data/realEstateData';
+import { Send, CheckCircle2, Phone, Mail, MapPin, Globe, Shield, Clock, AlertCircle } from 'lucide-react';
 
 interface ContactSectionProps {
-  initialService?: string;
+  initialInterest?: string;
+  initialLocation?: string;
 }
 
-export const ContactSection: React.FC<ContactSectionProps> = ({ initialService = '' }) => {
-  const [formData, setFormData] = useState<QuoteFormData>({
-    name: '',
+export const ContactSection: React.FC<ContactSectionProps> = ({
+  initialInterest = 'Buying',
+  initialLocation = '',
+}) => {
+  const [formData, setFormData] = useState({
+    fullName: '',
     email: '',
     phone: '',
-    serviceNeeded: initialService || SERVICES[0].title,
-    propertyType: 'Residential Single-Family',
-    urgency: 'Same-Day Service',
+    interest: initialInterest,
+    preferredLocation: initialLocation || 'London',
     message: '',
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const [ticketNumber, setTicketNumber] = useState('');
+  const [referenceId, setReferenceId] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validate = () => {
     const errs: { [key: string]: string } = {};
-    if (!formData.name.trim()) errs.name = 'Please provide your full name.';
+    if (!formData.fullName.trim()) errs.fullName = 'Please enter your full name.';
     if (!formData.email.trim() || !formData.email.includes('@')) errs.email = 'Please provide a valid email address.';
-    if (!formData.phone.trim() || formData.phone.length < 7) errs.phone = 'Please provide a contact phone number.';
-    if (!formData.message.trim()) errs.message = 'Please provide a brief description of the issue or project.';
+    if (!formData.phone.trim()) errs.phone = 'Please provide a contact telephone number.';
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -36,326 +37,266 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ initialService =
     e.preventDefault();
     if (!validate()) return;
 
-    // Generate realistic simulated service dispatch ticket
-    const randomTicket = `SDP-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-    setTicketNumber(randomTicket);
+    const ref = `AUR-${Math.floor(10000 + Math.random() * 90000)}`;
+    setReferenceId(ref);
     setSubmitted(true);
   };
 
+  const locations = ['London', 'New York', 'Miami', 'Dubai', 'Monaco', 'Los Angeles', 'Other Prime Capital'];
+  const interests = ['Buying', 'Selling', 'Renting', 'Investing'];
+
   return (
-    <section id="contact" className="py-20 bg-slate-50 border-b border-slate-200">
+    <section id="contact" className="py-28 bg-[#0b0c0e] relative border-b border-[#1f242d]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-14">
-          <p className="text-xs sm:text-sm font-bold tracking-wider uppercase text-blue-700 mb-2">
-            Direct Dispatch & Consultation
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-            Contact Sah Dams Plumbing Solutions
+        <div className="max-w-3xl mb-16">
+          <div className="inline-flex items-center gap-2 mb-3">
+            <span className="w-6 h-[1px] bg-[#c5a880]" />
+            <span className="text-[11px] uppercase tracking-[0.3em] font-medium text-[#c5a880]">
+              Private Communication
+            </span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light text-[#f9f7f4] tracking-tight mb-4">
+            Connect With Aurevia Estates
           </h2>
-          <p className="text-slate-600 text-base sm:text-lg">
-            Request your free comprehensive estimate or inquire about upcoming residential or commercial projects.
+          <p className="text-xs sm:text-sm text-[#a39784] font-light leading-relaxed">
+            Our private client partners manage all communications under strict confidentiality protocols.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           
-          {/* Left Column: Form (7 cols) */}
-          <div className="lg:col-span-7 bg-white rounded-2xl p-6 sm:p-10 border border-slate-200 shadow-lg">
+          {/* Form (7 cols) */}
+          <div className="lg:col-span-7 bg-[#111419] border border-[#232832] p-8 sm:p-12 shadow-2xl">
             {submitted ? (
-              <div className="py-8 text-center animate-in fade-in duration-300">
-                <div className="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center mb-6">
-                  <CheckCircle2 className="w-9 h-9" />
+              <div className="py-12 text-center space-y-6">
+                <div className="w-16 h-16 border border-[#c5a880] flex items-center justify-center text-[#c5a880] mx-auto">
+                  <CheckCircle2 className="w-8 h-8 stroke-[1.5]" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">
-                  Quote Request Confirmed!
-                </h3>
-                <p className="text-sm font-mono text-blue-700 font-bold mb-4">
-                  Reference Ticket #{ticketNumber}
-                </p>
-                <p className="text-slate-600 text-sm max-w-md mx-auto mb-6 leading-relaxed">
-                  Thank you, <span className="font-semibold text-slate-800">{formData.name}</span>. A master dispatch coordinator has received your request for <strong>{formData.serviceNeeded}</strong> and will call you at <strong>{formData.phone}</strong> within 15 minutes.
-                </p>
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 max-w-sm mx-auto text-xs text-slate-500 mb-6">
-                  <p>Urgency Level: <strong className="text-slate-800">{formData.urgency}</strong></p>
-                  <p>Confirmation email sent to: <strong className="text-slate-800">{formData.email}</strong></p>
+
+                <div className="space-y-2">
+                  <span className="text-[10px] uppercase tracking-[0.26em] font-mono text-[#c5a880]">
+                    Inquiry Confirmed · Ref #{referenceId}
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-serif text-[#f9f7f4]">
+                    Thank You, {formData.fullName}
+                  </h3>
                 </div>
+
+                <p className="text-xs sm:text-sm text-[#a39784] max-w-md mx-auto leading-relaxed font-light">
+                  A senior private client partner specializing in <strong>{formData.preferredLocation}</strong> will review your parameters and reach out confidentially within 4 business hours.
+                </p>
+
+                <div className="p-4 bg-[#0b0c0e] border border-[#1f242d] max-w-sm mx-auto text-xs text-[#8f8576] font-mono">
+                  <span>Interest: {formData.interest}</span>
+                  <span className="mx-2">·</span>
+                  <span>Contact: {formData.email}</span>
+                </div>
+
                 <button
                   onClick={() => {
                     setSubmitted(false);
                     setFormData({
-                      name: '',
+                      fullName: '',
                       email: '',
                       phone: '',
-                      serviceNeeded: SERVICES[0].title,
-                      propertyType: 'Residential Single-Family',
-                      urgency: 'Same-Day Service',
+                      interest: 'Buying',
+                      preferredLocation: 'London',
                       message: '',
                     });
                   }}
-                  className="px-6 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-colors cursor-pointer"
+                  className="px-6 py-2.5 text-xs uppercase tracking-[0.16em] font-semibold text-[#0b0c0e] bg-[#c5a880] hover:bg-[#dfc6a3] transition-colors cursor-pointer"
                 >
-                  Submit Another Inquiry
+                  Send Another Inquiry
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Johnathan Miller"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className={`w-full px-4 py-3 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                        errors.name ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
-                      }`}
-                    />
-                    {errors.name && (
-                      <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" />
-                        {errors.name}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      Phone Number *
-                    </label>
-                    <input
-                      type="tel"
-                      placeholder="(555) 000-0000"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className={`w-full px-4 py-3 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                        errors.phone ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
-                      }`}
-                    />
-                    {errors.phone && (
-                      <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" />
-                        {errors.phone}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      placeholder="john@example.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className={`w-full px-4 py-3 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                        errors.email ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
-                      }`}
-                    />
-                    {errors.email && (
-                      <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" />
-                        {errors.email}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      Service Needed *
-                    </label>
-                    <select
-                      value={formData.serviceNeeded}
-                      onChange={(e) => setFormData({ ...formData, serviceNeeded: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                    >
-                      {SERVICES.map((s) => (
-                        <option key={s.id} value={s.title}>
-                          {s.title}
-                        </option>
-                      ))}
-                      <option value="General Inspection / Other">General Inspection / Other</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      Property Type
-                    </label>
-                    <select
-                      value={formData.propertyType}
-                      onChange={(e) => setFormData({ ...formData, propertyType: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                    >
-                      <option value="Residential Single-Family">Residential Single-Family</option>
-                      <option value="Townhome / Condo">Townhome / Condo</option>
-                      <option value="Commercial Facility">Commercial Facility</option>
-                      <option value="Industrial / Multi-Tenant">Industrial / Multi-Tenant</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      Preferred Timeline / Urgency
-                    </label>
-                    <select
-                      value={formData.urgency}
-                      onChange={(e) => setFormData({ ...formData, urgency: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-                    >
-                      <option value="Urgent 24/7 Emergency (Within 45m)">Urgent 24/7 Emergency (&lt;45m)</option>
-                      <option value="Same-Day Service">Same-Day Service</option>
-                      <option value="Within 48 Hours">Within 48 Hours</option>
-                      <option value="Planning / In Advance">Planning / In Advance</option>
-                    </select>
-                  </div>
-                </div>
-
+              <form onSubmit={handleSubmit} className="space-y-6">
+                
+                {/* Full Name */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                    Project / Problem Details *
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-semibold text-[#a39784] mb-2">
+                    Full Name *
                   </label>
-                  <textarea
-                    rows={4}
-                    placeholder="Please describe the plumbing issue, fixtures, location in building, or project scope..."
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className={`w-full px-4 py-3 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                      errors.message ? 'border-red-400 bg-red-50/30' : 'border-slate-300'
+                  <input
+                    type="text"
+                    placeholder="e.g. Eleanor Vance"
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    className={`w-full bg-[#0b0c0e] text-[#f4efe8] border px-4 py-3 text-xs tracking-wider focus:outline-none transition-colors ${
+                      errors.fullName ? 'border-red-400' : 'border-[#282e38] focus:border-[#c5a880]'
                     }`}
                   />
-                  {errors.message && (
-                    <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {errors.message}
+                  {errors.fullName && (
+                    <p className="text-[11px] text-red-400 mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> {errors.fullName}
                     </p>
                   )}
                 </div>
 
+                {/* Email & Phone */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-[0.2em] font-semibold text-[#a39784] mb-2">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="client@domain.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className={`w-full bg-[#0b0c0e] text-[#f4efe8] border px-4 py-3 text-xs tracking-wider focus:outline-none transition-colors ${
+                        errors.email ? 'border-red-400' : 'border-[#282e38] focus:border-[#c5a880]'
+                      }`}
+                    />
+                    {errors.email && (
+                      <p className="text-[11px] text-red-400 mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" /> {errors.email}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-[0.2em] font-semibold text-[#a39784] mb-2">
+                      Telephone / WhatsApp *
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="+44 20 0000 0000"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className={`w-full bg-[#0b0c0e] text-[#f4efe8] border px-4 py-3 text-xs tracking-wider focus:outline-none transition-colors ${
+                        errors.phone ? 'border-red-400' : 'border-[#282e38] focus:border-[#c5a880]'
+                      }`}
+                    />
+                    {errors.phone && (
+                      <p className="text-[11px] text-red-400 mt-1 flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" /> {errors.phone}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Interest: Buying / Selling / Renting / Investing */}
+                <div>
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-semibold text-[#a39784] mb-2">
+                    I am interested in:
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {interests.map((item) => (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, interest: item })}
+                        className={`py-2.5 px-3 text-xs uppercase tracking-wider font-medium border transition-all cursor-pointer ${
+                          formData.interest === item
+                            ? 'bg-[#c5a880] text-[#0b0c0e] border-[#c5a880] font-bold'
+                            : 'bg-[#0b0c0e] text-[#a39784] border-[#222730] hover:text-[#f4efe8]'
+                        }`}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Preferred Location */}
+                <div>
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-semibold text-[#a39784] mb-2">
+                    Preferred Location
+                  </label>
+                  <select
+                    value={formData.preferredLocation}
+                    onChange={(e) => setFormData({ ...formData, preferredLocation: e.target.value })}
+                    className="w-full bg-[#0b0c0e] text-[#f4efe8] border border-[#282e38] px-4 py-3 text-xs tracking-wider focus:outline-none focus:border-[#c5a880]"
+                  >
+                    {locations.map((loc) => (
+                      <option key={loc} value={loc} className="bg-[#121418] text-[#f4efe8]">
+                        {loc}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Message */}
+                <div>
+                  <label className="block text-[10px] uppercase tracking-[0.2em] font-semibold text-[#a39784] mb-2">
+                    Specific Parameters / Requirements (Optional)
+                  </label>
+                  <textarea
+                    rows={4}
+                    placeholder="Tell us about desired architectural style, square footage, security needs, or transaction timeline..."
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    className="w-full bg-[#0b0c0e] text-[#f4efe8] border border-[#282e38] px-4 py-3 text-xs tracking-wider focus:outline-none focus:border-[#c5a880]"
+                  />
+                </div>
+
+                {/* Submit */}
                 <button
                   type="submit"
-                  className="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-4 text-xs uppercase tracking-[0.2em] font-semibold text-[#0b0c0e] bg-gradient-to-r from-[#dfc6a3] via-[#c5a880] to-[#bfa073] hover:from-[#f5ebd9] hover:to-[#dfc6a3] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg active:scale-95"
                 >
-                  <Send className="w-4 h-4" />
-                  <span>Submit Free Quote Request</span>
+                  <Send className="w-3.5 h-3.5 text-[#0b0c0e]" />
+                  <span>Transmit Private Inquiry</span>
                 </button>
 
-                <p className="text-center text-xs text-slate-400">
-                  Your information is kept strictly confidential. We never share customer data.
+                <p className="text-center text-[10px] uppercase tracking-[0.16em] text-[#786f62] font-mono">
+                  Guaranteed confidential processing · Non-disclosure protected
                 </p>
               </form>
             )}
           </div>
 
-          {/* Right Column: Fictional Business Contact Information (5 cols) */}
-          <div className="lg:col-span-5 flex flex-col justify-between">
-            <div className="bg-slate-900 text-white rounded-2xl p-8 shadow-xl border border-slate-800">
-              <h3 className="text-xl font-bold mb-1 text-white">
-                Sah Dams Headquarters
-              </h3>
-              <p className="text-xs uppercase font-mono tracking-wider text-sky-400 mb-6">
-                Official Business & Dispatch Details
-              </p>
+          {/* Fictional Global Offices Contact Information (5 cols) */}
+          <div className="lg:col-span-5 flex flex-col justify-between space-y-8">
+            <div className="space-y-6">
+              <span className="text-[10px] uppercase tracking-[0.28em] font-mono text-[#c5a880] block">
+                Global Headquarters & Desks
+              </span>
 
-              <div className="space-y-6 text-sm">
-                
-                {/* Phone */}
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sky-400 shrink-0">
-                    <Phone className="w-5 h-5" />
+              {COMPANY_DETAILS.offices.map((office, idx) => (
+                <div key={idx} className="p-6 bg-[#111317] border border-[#20252e] space-y-3">
+                  <div className="flex items-center justify-between border-b border-[#1c2028] pb-2">
+                    <h4 className="text-lg font-serif text-[#f9f7f4]">
+                      {office.city} Office
+                    </h4>
+                    <span className="text-[9px] uppercase tracking-[0.2em] font-mono text-[#c5a880]">
+                      Active Desk
+                    </span>
                   </div>
-                  <div>
-                    <span className="block text-xs uppercase text-slate-400 font-semibold">Customer Dispatch & Hotline</span>
-                    <a
-                      href={`tel:${COMPANY_INFO.phoneClean}`}
-                      className="text-lg font-bold text-white hover:text-sky-300 transition-colors font-mono"
-                    >
-                      {COMPANY_INFO.phone}
-                    </a>
-                    <span className="block text-xs text-emerald-400 font-medium mt-0.5">24/7/365 Emergency Dispatch</span>
-                  </div>
-                </div>
 
-                {/* Email */}
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sky-400 shrink-0">
-                    <Mail className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <span className="block text-xs uppercase text-slate-400 font-semibold">Service & Estimating Email</span>
-                    <a
-                      href={`mailto:${COMPANY_INFO.email}`}
-                      className="text-white hover:text-sky-300 transition-colors font-mono text-sm"
-                    >
-                      {COMPANY_INFO.email}
-                    </a>
-                  </div>
-                </div>
-
-                {/* Address */}
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sky-400 shrink-0">
-                    <MapPin className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <span className="block text-xs uppercase text-slate-400 font-semibold">Central Operations Center</span>
-                    <p className="text-slate-300 leading-relaxed">
-                      {COMPANY_INFO.address}
+                  <div className="space-y-2 text-xs text-[#a39784] font-light">
+                    <p className="flex items-start gap-2">
+                      <MapPin className="w-3.5 h-3.5 text-[#c5a880] shrink-0 mt-0.5" />
+                      <span>{office.address}</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Phone className="w-3.5 h-3.5 text-[#c5a880] shrink-0" />
+                      <a href={`tel:${office.phone.replace(/[^0-9+]/g, '')}`} className="hover:text-[#f4efe8] transition-colors font-mono">
+                        {office.phone}
+                      </a>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <Mail className="w-3.5 h-3.5 text-[#c5a880] shrink-0" />
+                      <a href={`mailto:${office.email}`} className="hover:text-[#f4efe8] transition-colors font-mono">
+                        {office.email}
+                      </a>
                     </p>
                   </div>
                 </div>
-
-                {/* Hours */}
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sky-400 shrink-0">
-                    <Clock className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <span className="block text-xs uppercase text-slate-400 font-semibold">Regular Service Hours</span>
-                    <p className="text-slate-300">
-                      {COMPANY_INFO.hours}
-                    </p>
-                    <p className="text-xs text-sky-400 font-semibold mt-1">
-                      Emergency Units: Active 24 Hours Every Day
-                    </p>
-                  </div>
-                </div>
-
-                {/* License & Certification */}
-                <div className="flex items-start gap-4 pt-4 border-t border-slate-800">
-                  <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-sky-400 shrink-0">
-                    <ShieldCheck className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <span className="block text-xs uppercase text-slate-400 font-semibold">Licensing & Credentials</span>
-                    <p className="text-xs font-mono text-slate-300">
-                      {COMPANY_INFO.license}
-                    </p>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      {COMPANY_INFO.bondedInsured}
-                    </p>
-                  </div>
-                </div>
-
-              </div>
+              ))}
             </div>
 
-            {/* Quick Map or Dispatch Visual Card */}
-            <div className="mt-6 bg-blue-50 rounded-2xl p-6 border border-blue-200/80">
-              <h4 className="text-sm font-bold text-blue-900 mb-1">
-                Same-Day Guarantee
-              </h4>
-              <p className="text-xs text-blue-800 leading-relaxed">
-                Calls placed before 2:00 PM for standard non-emergency appointments are guaranteed a same-day diagnostic visit within our primary zones.
+            {/* Private Hours Note */}
+            <div className="p-5 bg-[#0e1014] border border-[#232832] text-xs text-[#8f8576] space-y-1">
+              <div className="flex items-center gap-2 text-[#dfc6a3] font-mono text-[11px] mb-1">
+                <Clock className="w-3.5 h-3.5" />
+                <span>24/7 International Desk for Sovereign Clients</span>
+              </div>
+              <p className="font-light">
+                Secure encrypted channels available via Signal, WhatsApp, and private courier upon request.
               </p>
             </div>
           </div>

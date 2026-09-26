@@ -1,123 +1,97 @@
 import React from 'react';
-import { ShieldCheck, Award, Clock, Users, ArrowRight } from 'lucide-react';
-import { STATS, COMPANY_INFO } from '../data/plumbingData';
+import { COMPANY_DETAILS } from '../data/realEstateData';
+import { ArrowUpRight, Award, Shield, Compass } from 'lucide-react';
 
 interface AboutSectionProps {
-  onOpenQuote: () => void;
+  onOpenConsultation: () => void;
 }
 
-export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenQuote }) => {
+export const AboutSection: React.FC<AboutSectionProps> = ({ onOpenConsultation }) => {
   return (
-    <section id="about" className="py-20 bg-slate-50 border-b border-slate-200">
+    <section id="about" className="py-28 bg-[#0b0c0e] relative border-b border-[#1f242d]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Main Grid: Story + Credentials */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+        {/* Main 2-column Editorial Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center mb-24">
           
-          {/* Left Column: Story */}
-          <div className="lg:col-span-7">
-            <p className="text-xs sm:text-sm font-bold tracking-wider uppercase text-blue-700 mb-2">
-              About Sah Dams Plumbing Solutions
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-6 [text-wrap:balance]">
-              Built on Precision Craftsmanship & Uncompromising Integrity
-            </h2>
-            
-            <div className="space-y-4 text-slate-600 text-base sm:text-lg leading-relaxed mb-8">
-              <p>
-                Founded over a decade ago in Metroville, <span className="font-semibold text-slate-900">Sah Dams Plumbing Solutions</span> began with a single promise: to provide homeowners and businesses with transparent, master-level plumbing services devoid of inflated fees or hurried shortcuts.
-              </p>
-              <p>
-                Whether diagnosing an elusive acoustic slab leak, repiping a vintage residential property with oxygen-barrier PEX-A, or executing high-volume commercial backflow installations, our crew consists strictly of state-licensed technicians. We treat every job site like a surgical suite, employing protective runners, wearing shoe covers, and conducting full pressure tests before clearing a site.
-              </p>
-              <p className="text-sm font-medium text-slate-700 bg-white p-4 rounded-xl border border-slate-200">
-                “Plumbing isn't just about turning wrenches. It's about protecting property value, public sanitation, and giving families peace of mind when they turn on their taps.”
-              </p>
+          {/* Left Text Narrative (6 cols) */}
+          <div className="lg:col-span-6 space-y-6">
+            <div className="inline-flex items-center gap-2">
+              <span className="w-6 h-[1px] bg-[#c5a880]" />
+              <span className="text-[11px] uppercase tracking-[0.3em] font-medium text-[#c5a880]">
+                Private Client Advisory
+              </span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-light text-[#f9f7f4] tracking-tight leading-[1.15] [text-wrap:balance]">
+              Where Exceptional Properties Meet Exceptional Service.
+            </h2>
+
+            <p className="text-sm sm:text-base text-[#d4c9b8] font-light leading-relaxed">
+              Founded on the belief that acquiring prime real estate is an art of absolute discernment, Aurevia Estates represents high-net-worth individuals, family offices, and sovereign wealth entities across the globe.
+            </p>
+
+            <p className="text-xs sm:text-sm text-[#8f8576] font-light leading-relaxed">
+              We specialize in connecting our clients with distinctive residential properties, private island sanctuaries, and premier commercial real estate opportunities. Every advisory relationship is anchored in complete confidentiality, institutional due diligence, and privileged access to off-market inventory unavailable through conventional channels.
+            </p>
+
+            <div className="pt-4 flex items-center gap-6">
               <button
-                onClick={onOpenQuote}
-                className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-md transition-all flex items-center gap-2"
+                onClick={onOpenConsultation}
+                className="px-7 py-3.5 text-xs uppercase tracking-[0.18em] font-semibold text-[#0b0c0e] bg-gradient-to-r from-[#dfc6a3] via-[#c5a880] to-[#bfa073] hover:from-[#f5ebd9] hover:to-[#dfc6a3] transition-all flex items-center gap-2 cursor-pointer shadow-md"
               >
-                <span>Work With Us</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>The Aurevia Heritage</span>
+                <ArrowUpRight className="w-4 h-4 text-[#0b0c0e]" />
               </button>
-              <a
-                href="#contact"
-                className="px-6 py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-800 font-semibold text-sm border border-slate-300 transition-colors"
-              >
-                Get in Touch
-              </a>
+
+              <div className="flex flex-col">
+                <span className="font-serif italic text-base text-[#f4efe8]">Julian Sterling</span>
+                <span className="text-[10px] uppercase tracking-wider text-[#a39784]">Managing Partner, Advisory</span>
+              </div>
             </div>
           </div>
 
-          {/* Right Column: Master Plumber Standard Card */}
-          <div className="lg:col-span-5">
-            <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/5 rounded-bl-full pointer-events-none" />
-              
-              <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200/80 flex items-center justify-center text-blue-700 mb-6">
-                <ShieldCheck className="w-6 h-6" />
+          {/* Right Architecture Imagery (6 cols) */}
+          <div className="lg:col-span-6 relative">
+            <div className="relative border border-[#2a303b] overflow-hidden shadow-2xl bg-[#121418]">
+              <div className="aspect-[4/3] sm:aspect-[16/11] overflow-hidden">
+                <img
+                  src="/src/assets/images/about_luxury_arch_1790395325634.jpg"
+                  alt="Sculptural Roman travertine luxury architectural villa"
+                  className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-1000 ease-out"
+                  loading="lazy"
+                />
               </div>
 
-              <h3 className="text-xl font-bold text-slate-900 mb-2">
-                The Sah Dams Standard
-              </h3>
-              <p className="text-xs uppercase tracking-wider font-semibold text-slate-400 mb-6">
-                Certified Code Compliance Guarantee
-              </p>
-
-              <div className="space-y-4 text-sm text-slate-700">
-                <div className="flex items-start gap-3">
-                  <Award className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-bold text-slate-900 block">Master Plumber Oversight</span>
-                    <span>Every project blueprint and installation is inspected to surpass local municipal plumbing standards.</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Clock className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-bold text-slate-900 block">Punctual & Prepared</span>
-                    <span>Technicians arrive on schedule with fully stocked mobile units containing OEM replacement parts.</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Users className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-bold text-slate-900 block">Clean Jobsite Protocol</span>
-                    <span>We leave every bathroom, basement, and kitchen cleaner than we found it. No debris left behind.</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 font-mono">
-                <span>{COMPANY_INFO.license}</span>
-                <span>Bonded to $2M</span>
+              {/* Floating Architectural Badge */}
+              <div className="absolute bottom-5 right-5 bg-[#0b0c0e]/90 backdrop-blur-md p-4 border border-[#282e38] max-w-xs hidden sm:block">
+                <span className="text-[9px] uppercase tracking-[0.24em] font-mono text-[#c5a880] block mb-1">
+                  Global Portfolio Standard
+                </span>
+                <p className="text-xs text-[#d4c9b8] font-light">
+                  Direct partnership with top European & American architectural masters.
+                </p>
               </div>
             </div>
           </div>
 
         </div>
 
-        {/* Quantified Rigor Statistics Bar (Tabular Numerals) */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {STATS.map((stat, i) => (
+        {/* Quantified Statistics Strip (Required stats) */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-12 border-t border-[#1f242d]">
+          {COMPANY_DETAILS.stats.map((stat, i) => (
             <div
               key={i}
-              className="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200 shadow-sm text-center flex flex-col justify-center items-center"
+              className="p-6 bg-[#111317] border border-[#222731] flex flex-col justify-center"
             >
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight font-mono tabular-nums mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-sky-600">
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-serif text-[#dfc6a3] font-light mb-2">
                 {stat.value}
               </div>
-              <div className="text-sm sm:text-base font-bold text-slate-800 mb-1">
+              <div className="text-xs sm:text-sm font-medium uppercase tracking-[0.14em] text-[#f4efe8] mb-1">
                 {stat.label}
               </div>
-              <div className="text-xs text-slate-500">
-                {stat.subtext}
+              <div className="text-[11px] text-[#786f62] font-light">
+                {stat.sub}
               </div>
             </div>
           ))}

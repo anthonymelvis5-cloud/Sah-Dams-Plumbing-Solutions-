@@ -1,135 +1,178 @@
 import React from 'react';
-import { Shield, Phone, Mail, MapPin } from 'lucide-react';
-import { COMPANY_INFO, SERVICES } from '../data/plumbingData';
+import { COMPANY_DETAILS, PROPERTIES } from '../data/realEstateData';
+import { Globe, ArrowUpRight } from 'lucide-react';
 
 interface FooterProps {
-  onOpenQuote: (service?: string) => void;
+  onOpenConsultation: (topic?: string) => void;
+  onFilterStatus?: (status: 'Buy' | 'Rent') => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenQuote }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenConsultation, onFilterStatus }) => {
   return (
-    <footer className="bg-slate-950 text-slate-300 border-t border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-slate-800/80">
+    <footer className="bg-[#07080a] text-[#a39784] border-t border-[#1a1e26]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12">
+        
+        {/* Main 5-Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-16 border-b border-[#1c2027]">
           
           {/* Brand Col (2 cols on lg) */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-sky-600 flex items-center justify-center text-white">
-                <Shield className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <span className="text-xl font-bold tracking-tight text-white block leading-none">
-                  Sah Dams
+          <div className="lg:col-span-2 space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 border border-[#c5a880]/60 flex items-center justify-center rotate-45">
+                <span className="-rotate-45 font-brand text-xs font-semibold text-[#c5a880] tracking-widest">
+                  A
                 </span>
-                <span className="text-[11px] uppercase tracking-wider font-semibold text-sky-400">
-                  Plumbing Solutions
+              </div>
+              <div className="flex flex-col">
+                <span className="font-brand text-lg font-bold tracking-[0.24em] text-[#f4efe8] uppercase leading-none">
+                  Aurevia
+                </span>
+                <span className="text-[9px] tracking-[0.3em] uppercase text-[#a39784] font-medium mt-1">
+                  Estates · Private Client
                 </span>
               </div>
             </div>
-            
-            <p className="text-slate-400 text-sm leading-relaxed mb-6 max-w-sm">
-              Metroville’s premier licensed plumbing contractor providing master-grade residential repiping, commercial installations, leak detection, and 24/7 rapid emergency dispatch.
+
+            <p className="text-xs text-[#8f8576] font-light leading-relaxed max-w-sm">
+              International luxury real estate advisory specializing in the acquisition, sale, and curation of prime residential properties and architectural masterpieces in the world’s most desirable locations.
             </p>
 
-            <div className="space-y-2 text-xs text-slate-400 font-mono">
-              <p>{COMPANY_INFO.license}</p>
-              <p>{COMPANY_INFO.bondedInsured}</p>
+            <div className="pt-2 flex items-center gap-4 text-xs font-mono text-[#c5a880]">
+              <span>London</span>
+              <span>·</span>
+              <span>New York</span>
+              <span>·</span>
+              <span>Monaco</span>
+              <span>·</span>
+              <span>Dubai</span>
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Properties Col */}
           <div>
-            <h4 className="text-xs uppercase font-bold tracking-wider text-white mb-4">
-              Navigation
+            <h4 className="text-[11px] uppercase tracking-[0.22em] font-semibold text-[#f4efe8] mb-5">
+              Properties
             </h4>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-3 text-xs font-light">
               <li>
-                <a href="#home" className="hover:text-white transition-colors">Home</a>
+                <a href="#properties" onClick={() => onFilterStatus?.('Buy')} className="hover:text-[#dfc6a3] transition-colors">
+                  Properties for Sale
+                </a>
               </li>
               <li>
-                <a href="#services" className="hover:text-white transition-colors">All Services</a>
+                <a href="#properties" onClick={() => onFilterStatus?.('Rent')} className="hover:text-[#dfc6a3] transition-colors">
+                  Luxury Prime Rentals
+                </a>
               </li>
               <li>
-                <a href="#about" className="hover:text-white transition-colors">About Sah Dams</a>
+                <a href="#properties" className="hover:text-[#dfc6a3] transition-colors">
+                  Signature Collection
+                </a>
               </li>
               <li>
-                <a href="#projects" className="hover:text-white transition-colors">Project Portfolio</a>
+                <button
+                  onClick={() => onOpenConsultation('Off-Market Inquiries')}
+                  className="hover:text-[#dfc6a3] transition-colors text-left"
+                >
+                  Off-Market Estates
+                </button>
               </li>
               <li>
-                <a href="#reviews" className="hover:text-white transition-colors">Verified Reviews</a>
-              </li>
-              <li>
-                <a href="#contact" className="hover:text-white transition-colors">Direct Contact</a>
+                <a href="#properties" className="hover:text-[#dfc6a3] transition-colors">
+                  Waterfront Villas
+                </a>
               </li>
             </ul>
           </div>
 
-          {/* Services Links */}
+          {/* Services Col */}
           <div>
-            <h4 className="text-xs uppercase font-bold tracking-wider text-white mb-4">
+            <h4 className="text-[11px] uppercase tracking-[0.22em] font-semibold text-[#f4efe8] mb-5">
               Services
             </h4>
-            <ul className="space-y-2.5 text-sm">
-              {SERVICES.map((s) => (
-                <li key={s.id}>
-                  <button
-                    onClick={() => onOpenQuote(s.title)}
-                    className="hover:text-sky-400 transition-colors text-left cursor-pointer"
-                  >
-                    {s.title}
-                  </button>
-                </li>
-              ))}
+            <ul className="space-y-3 text-xs font-light">
+              <li>
+                <button onClick={() => onOpenConsultation('Acquisition Advisory')} className="hover:text-[#dfc6a3] transition-colors text-left">
+                  Acquisition Advisory
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onOpenConsultation('Selling a Property')} className="hover:text-[#dfc6a3] transition-colors text-left">
+                  Strategic Representation
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onOpenConsultation('Private Client Services')} className="hover:text-[#dfc6a3] transition-colors text-left">
+                  Private Client Office
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onOpenConsultation('Property Investment')} className="hover:text-[#dfc6a3] transition-colors text-left">
+                  Investment Guidance
+                </button>
+              </li>
+              <li>
+                <a href="#journal" className="hover:text-[#dfc6a3] transition-colors">
+                  Market Intelligence
+                </a>
+              </li>
             </ul>
           </div>
 
-          {/* Direct Dispatch Column */}
+          {/* Company & Contact Col */}
           <div>
-            <h4 className="text-xs uppercase font-bold tracking-wider text-white mb-4">
-              24/7 Dispatch
+            <h4 className="text-[11px] uppercase tracking-[0.22em] font-semibold text-[#f4efe8] mb-5">
+              Company
             </h4>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-start gap-2.5">
-                <Phone className="w-4 h-4 text-sky-400 mt-1 shrink-0" />
-                <div>
-                  <a href={`tel:${COMPANY_INFO.phoneClean}`} className="font-bold text-white hover:text-sky-300 font-mono">
-                    {COMPANY_INFO.phone}
-                  </a>
-                  <p className="text-xs text-slate-400">Emergency Call Line</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2.5">
-                <Mail className="w-4 h-4 text-sky-400 mt-1 shrink-0" />
-                <div>
-                  <a href={`mailto:${COMPANY_INFO.email}`} className="text-slate-300 hover:text-white text-xs font-mono">
-                    {COMPANY_INFO.email}
-                  </a>
-                  <p className="text-xs text-slate-400">Quotes & Inquiries</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-sky-400 mt-1 shrink-0" />
-                <p className="text-xs text-slate-400">
-                  {COMPANY_INFO.address}
-                </p>
-              </div>
-            </div>
+            <ul className="space-y-3 text-xs font-light">
+              <li>
+                <a href="#about" className="hover:text-[#dfc6a3] transition-colors">
+                  About Aurevia
+                </a>
+              </li>
+              <li>
+                <a href="#journal" className="hover:text-[#dfc6a3] transition-colors">
+                  The Journal
+                </a>
+              </li>
+              <li>
+                <a href="#contact" className="hover:text-[#dfc6a3] transition-colors">
+                  Global Desks
+                </a>
+              </li>
+              <li>
+                <button onClick={() => onOpenConsultation('Press & Editorial')} className="hover:text-[#dfc6a3] transition-colors text-left">
+                  Press & Media
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onOpenConsultation('Careers')} className="hover:text-[#dfc6a3] transition-colors text-left">
+                  Advisory Careers
+                </button>
+              </li>
+            </ul>
           </div>
 
         </div>
 
-        {/* Quiet Legal and Disclaimer Bar */}
-        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        {/* Bottom Legal & Copyright Bar */}
+        <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-[#786f62] font-mono">
           <p>
-            © {new Date().getFullYear()} Sah Dams Plumbing Solutions. All rights reserved.
+            © {new Date().getFullYear()} Aurevia Estates Ltd. All rights reserved.
           </p>
+
           <div className="flex items-center gap-6">
-            <span>Residential & Commercial Plumbing</span>
+            <span className="hover:text-[#a39784] transition-colors cursor-pointer">
+              Privacy Policy
+            </span>
             <span>·</span>
-            <span>Zero-Shortcuts Guarantee</span>
+            <span className="hover:text-[#a39784] transition-colors cursor-pointer">
+              Terms of Advisory
+            </span>
+            <span>·</span>
+            <span className="hover:text-[#a39784] transition-colors cursor-pointer">
+              Anti-Money Laundering (AML) Compliance
+            </span>
           </div>
         </div>
 

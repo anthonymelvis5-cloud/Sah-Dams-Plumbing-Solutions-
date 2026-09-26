@@ -1,114 +1,113 @@
-import React, { useState } from 'react';
-import { Phone, Menu, X, Shield, ArrowRight } from 'lucide-react';
-import { COMPANY_INFO } from '../data/plumbingData';
+import React, { useState, useEffect } from 'react';
+import { Menu, X, ArrowUpRight, Phone, Globe } from 'lucide-react';
+import { COMPANY_DETAILS } from '../data/realEstateData';
 
 interface NavbarProps {
-  onOpenQuote: (service?: string) => void;
+  onOpenConsultation: (topic?: string) => void;
+  onFilterStatus?: (status: 'Buy' | 'Rent') => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, onFilterStatus }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 30) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
     { name: 'Home', href: '#home' },
-    { name: 'Services', href: '#services' },
+    { name: 'Properties', href: '#properties' },
+    { name: 'Buy', href: '#properties', action: () => onFilterStatus?.('Buy') },
+    { name: 'Rent', href: '#properties', action: () => onFilterStatus?.('Rent') },
+    { name: 'Sell With Us', href: '#services', action: () => onOpenConsultation('Selling a Property') },
     { name: 'About', href: '#about' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Reviews', href: '#reviews' },
+    { name: 'Journal', href: '#journal' },
     { name: 'Contact', href: '#contact' },
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 transition-all">
-      {/* Top Emergency Notice Ribbon */}
-      <div className="bg-slate-900 text-slate-200 text-xs py-2 px-4 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 tracking-wide font-medium">
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-white font-semibold">24/7 Rapid Dispatch:</span>
-            <span className="hidden sm:inline text-slate-300">On duty across Metroville & all surrounding valleys</span>
-          </div>
-          <div className="flex items-center gap-4 text-slate-300 text-xs">
-            <span className="hidden md:inline font-mono">{COMPANY_INFO.license}</span>
-            <a 
-              href={`tel:${COMPANY_INFO.phoneClean}`}
-              className="flex items-center gap-1.5 font-bold text-sky-400 hover:text-sky-300 transition-colors whitespace-nowrap"
-            >
-              <Phone className="w-3.5 h-3.5" />
-              <span>{COMPANY_INFO.phone}</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Navigation Bar (Top Bar Contract: 3 Zones) */}
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? 'bg-[#0b0c0e]/92 backdrop-blur-md border-b border-[#252a32] py-4 shadow-2xl'
+          : 'bg-gradient-to-b from-[#0b0c0e]/80 via-[#0b0c0e]/40 to-transparent py-6'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between">
           
-          {/* Zone 1: Single text element wordmark with clean icon */}
-          <a href="#home" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-sky-700 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">
-              <Shield className="w-5 h-5 text-white" />
+          {/* Brand Logo & Monogram */}
+          <a href="#home" className="flex items-center gap-3 group">
+            <div className="w-9 h-9 border border-[#c5a880]/60 flex items-center justify-center rotate-45 group-hover:border-[#c5a880] transition-colors duration-300">
+              <span className="-rotate-45 font-brand text-xs font-semibold text-[#c5a880] tracking-widest">
+                A
+              </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 leading-none">
-                Sah Dams
+              <span className="font-brand text-lg sm:text-xl font-bold tracking-[0.22em] text-[#f4efe8] uppercase leading-none">
+                Aurevia
               </span>
-              <span className="text-xs uppercase tracking-wider font-semibold text-sky-700">
-                Plumbing Solutions
+              <span className="text-[9px] tracking-[0.3em] uppercase text-[#a39784] font-medium mt-1">
+                Estates · Private Client
               </span>
             </div>
           </a>
 
-          {/* Zone 2: 4-6 Clean text navigation links */}
-          <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-600">
+          {/* Center Navigation Links */}
+          <nav className="hidden xl:flex items-center gap-8 text-[13px] tracking-[0.14em] uppercase font-medium text-[#c4b9a8]">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="hover:text-blue-700 transition-colors relative py-1 hover:border-b-2 hover:border-blue-600"
+                onClick={(e) => {
+                  if (link.action) {
+                    link.action();
+                  }
+                }}
+                className="hover:text-[#f4efe8] transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[1px] after:bg-[#c5a880] after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-200"
               >
                 {link.name}
               </a>
             ))}
           </nav>
 
-          {/* Zone 3: Primary Actions */}
-          <div className="hidden sm:flex items-center gap-4">
-            <a
-              href={`tel:${COMPANY_INFO.phoneClean}`}
-              className="hidden xl:flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-blue-600 transition-colors"
-            >
-              <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                <Phone className="w-4 h-4" />
-              </div>
-              <div className="text-left leading-tight">
-                <span className="block text-[11px] uppercase tracking-wider text-slate-400 font-semibold">24/7 Hotline</span>
-                <span className="font-bold text-slate-900">{COMPANY_INFO.phone}</span>
-              </div>
-            </a>
+          {/* Right Action Controls */}
+          <div className="hidden md:flex items-center gap-5">
+            <div className="hidden lg:flex items-center gap-2 text-xs text-[#a39784] tracking-wider uppercase font-mono">
+              <Globe className="w-3.5 h-3.5 text-[#c5a880]" />
+              <span>LDN · NYC · MC</span>
+            </div>
 
             <button
-              onClick={() => onOpenQuote()}
-              className="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-md shadow-blue-600/25 hover:shadow-lg hover:shadow-blue-600/35 transition-all duration-200 whitespace-nowrap active:scale-95 flex items-center gap-1.5"
+              onClick={() => onOpenConsultation('Private Client Advisory')}
+              className="relative px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.16em] text-[#0b0c0e] bg-gradient-to-r from-[#dfc6a3] via-[#c5a880] to-[#bfa073] hover:from-[#f5ebd9] hover:to-[#c5a880] transition-all duration-300 shadow-md shadow-[#c5a880]/15 hover:shadow-lg hover:shadow-[#c5a880]/25 flex items-center gap-1.5 active:scale-95 cursor-pointer"
             >
-              <span>Get a Free Quote</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>Schedule Consultation</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center gap-2 sm:hidden">
+          <div className="flex items-center gap-3 xl:hidden">
             <button
-              onClick={() => onOpenQuote()}
-              className="px-3 py-1.5 rounded-md bg-blue-600 text-white text-xs font-semibold whitespace-nowrap"
+              onClick={() => onOpenConsultation('Private Client Advisory')}
+              className="md:hidden px-3 py-1.5 text-[10px] uppercase tracking-wider font-semibold bg-[#c5a880] text-[#0b0c0e]"
             >
-              Quote
+              Consult
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-600 hover:text-slate-900 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label="Toggle Navigation Menu"
+              className="p-2 text-[#f4efe8] hover:text-[#c5a880] transition-colors focus:outline-none"
+              aria-label="Toggle Navigation"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -117,39 +116,40 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="sm:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 shadow-xl animate-in slide-in-from-top duration-200">
-          <nav className="flex flex-col space-y-3">
+        <div className="xl:hidden bg-[#0e1014]/98 backdrop-blur-xl border-t border-[#22262d] px-6 py-8 shadow-2xl transition-all">
+          <div className="flex flex-col space-y-4 text-center">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 text-base font-medium text-slate-800 hover:bg-blue-50 hover:text-blue-700 rounded-md transition-colors"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  if (link.action) link.action();
+                }}
+                className="text-base uppercase tracking-[0.18em] font-medium text-[#d8cebf] hover:text-[#c5a880] py-2 border-b border-[#1a1e24] transition-colors"
               >
                 {link.name}
               </a>
             ))}
-            <div className="pt-3 border-t border-slate-100 flex flex-col gap-2.5">
-              <a
-                href={`tel:${COMPANY_INFO.phoneClean}`}
-                className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-slate-100 text-slate-800 font-semibold text-sm"
-              >
-                <Phone className="w-4 h-4 text-blue-600" />
-                <span>Call {COMPANY_INFO.phone}</span>
-              </a>
+
+            <div className="pt-4 flex flex-col gap-3">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  onOpenQuote();
+                  onOpenConsultation('Private Client Advisory');
                 }}
-                className="w-full py-2.5 px-4 rounded-lg bg-blue-600 text-white font-semibold text-sm text-center shadow-sm"
+                className="w-full py-3 text-xs uppercase tracking-[0.2em] font-semibold bg-[#c5a880] text-[#0b0c0e]"
               >
-                Get a Free Quote
+                Schedule Private Consultation
               </button>
+              <div className="flex items-center justify-center gap-2 text-xs text-[#a39784] font-mono pt-2">
+                <Phone className="w-3.5 h-3.5 text-[#c5a880]" />
+                <span>+44 (0)20 7946 0982 · Global Desk</span>
+              </div>
             </div>
-          </nav>
+          </div>
         </div>
       )}
     </header>
